@@ -29,5 +29,8 @@ test/fixtures/**/.fbkpm
 ignition/**/*.d.ts
 ignition/**/*.js
 ignition/**/*.js.map
+shared/**/*.d.ts
+shared/**/*.js
+shared/**/*.js.map
 !ignition/.eslintrc.js
 lib
