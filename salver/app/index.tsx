@@ -20,7 +20,6 @@ import {
   hrefToRoute,
   urlToRoute,
 } from "./util";
-import "./debug";
 
 export const EventAfterRouteChanged = Symbol("after-route-changed");
 export const EventBeforeRouteChanged = Symbol("before-route-changed");
