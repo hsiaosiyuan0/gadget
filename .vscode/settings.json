@@ -4,6 +4,7 @@
     "browserslist",
     "corejs",
     "mdast",
+    "rehype",
     "resultify",
     "unist",
     "vfile"
