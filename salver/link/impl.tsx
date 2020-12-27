@@ -1,4 +1,4 @@
-import React, { cloneElement, useState, useEffect } from "react";
+import React, { cloneElement, useState, useEffect, useRef } from "react";
 import { Route, hrefToUrl, isHrefEqual, Href } from "../app/util";
 import { EventAfterRouteChanged, getCurRoute, pushHistory } from "../app";
 import { classNames, packToArray, on, off } from "../../shared";
@@ -31,12 +31,10 @@ function classNameList(
 export const Link: ILink = (props) => {
   const [href, setHref] = useState(unifyHref(props.href));
   const [active, setActive] = useState(isHrefEqual(href, getCurRoute().href));
-  const [classList, setClassList] = useState<string[]>(
-    classNameList(active, props.html?.className, props.activeClassName)
-  );
   const [children, setChildren] = useState<Array<React.ReactNode>>(
     unifyChildren(props.children, active, href)
   );
+  const elem = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const href = unifyHref(props.href);
@@ -54,9 +52,11 @@ export const Link: ILink = (props) => {
   }, [props.href]);
 
   useEffect(() => {
-    setClassList(
-      classNameList(active, props.html?.className, props.activeClassName)
-    );
+    if (elem.current) {
+      elem.current.className = classNames(
+        classNameList(active, props.html?.className, props.activeClassName)
+      );
+    }
   }, [props.html?.className, active]);
 
   useEffect(() => {
@@ -66,8 +66,8 @@ export const Link: ILink = (props) => {
   return (
     <a
       {...props.html}
+      ref={elem}
       href={href && hrefToUrl(href, false)}
-      className={classNames(classList)}
       onClick={(evt) => {
         if (props.html?.onClick) {
           props.html.onClick(evt);

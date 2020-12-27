@@ -14063,7 +14063,7 @@ function classNameList(active) {
 }
 
 var Link = function Link(props) {
-  var _props$html, _props$html3;
+  var _props$html2;
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)((0,_type__WEBPACK_IMPORTED_MODULE_8__.unifyHref)(props.href)),
       _useState2 = _slicedToArray(_useState, 2),
@@ -14075,16 +14075,12 @@ var Link = function Link(props) {
       active = _useState4[0],
       setActive = _useState4[1];
 
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(classNameList(active, (_props$html = props.html) === null || _props$html === void 0 ? void 0 : _props$html.className, props.activeClassName)),
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(unifyChildren(props.children, active, href)),
       _useState6 = _slicedToArray(_useState5, 2),
-      classList = _useState6[0],
-      setClassList = _useState6[1];
+      children = _useState6[0],
+      setChildren = _useState6[1];
 
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_4__.useState)(unifyChildren(props.children, active, href)),
-      _useState8 = _slicedToArray(_useState7, 2),
-      children = _useState8[0],
-      setChildren = _useState8[1];
-
+  var elem = (0,react__WEBPACK_IMPORTED_MODULE_4__.useRef)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
     var href = (0,_type__WEBPACK_IMPORTED_MODULE_8__.unifyHref)(props.href);
     setHref(href);
@@ -14100,20 +14096,22 @@ var Link = function Link(props) {
     };
   }, [props.href]);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
-    var _props$html2;
+    if (elem.current) {
+      var _props$html;
 
-    setClassList(classNameList(active, (_props$html2 = props.html) === null || _props$html2 === void 0 ? void 0 : _props$html2.className, props.activeClassName));
-  }, [(_props$html3 = props.html) === null || _props$html3 === void 0 ? void 0 : _props$html3.className, active]);
+      elem.current.className = (0,_shared__WEBPACK_IMPORTED_MODULE_7__.classNames)(classNameList(active, (_props$html = props.html) === null || _props$html === void 0 ? void 0 : _props$html.className, props.activeClassName));
+    }
+  }, [(_props$html2 = props.html) === null || _props$html2 === void 0 ? void 0 : _props$html2.className, active]);
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(function () {
     setChildren(unifyChildren(props.children, active, href));
   }, [props.children, active, href]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default().createElement("a", _extends({}, props.html, {
+    ref: elem,
     href: href && (0,_app_util__WEBPACK_IMPORTED_MODULE_5__.hrefToUrl)(href, false),
-    className: (0,_shared__WEBPACK_IMPORTED_MODULE_7__.classNames)(classList),
     onClick: function onClick(evt) {
-      var _props$html4;
+      var _props$html3;
 
-      if ((_props$html4 = props.html) !== null && _props$html4 !== void 0 && _props$html4.onClick) {
+      if ((_props$html3 = props.html) !== null && _props$html3 !== void 0 && _props$html3.onClick) {
         props.html.onClick(evt);
       }
 

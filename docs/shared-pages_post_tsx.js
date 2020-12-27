@@ -160,7 +160,7 @@ function Node(data) {
 
     var indent = (_data$indent = data.indent) !== null && _data$indent !== void 0 ? _data$indent : 0;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement("li", {
-      key: i
+      key: cd.url
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement(Node, _extends({}, cd, {
       indent: indent + (data.children.length ? 15 : 0)
     })));
@@ -171,7 +171,7 @@ function Sidebar(props) {
     className: _components_sidebar_index_pure_scss__WEBPACK_IMPORTED_MODULE_4__.default.sidebar
   }, props.data.map(function (data, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default().createElement(Node, _extends({
-      key: i
+      key: data.url
     }, data));
   }));
 }
