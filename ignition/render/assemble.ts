@@ -4,6 +4,10 @@ import type { createElement } from "react";
 
 const NS = "__gadget__";
 
+function concatUrl(origin: string, path: string) {
+  return (origin.endsWith("/") ? origin : origin + "/") + path;
+}
+
 // load from user-space
 const fromCwd = (id: string) => require.resolve(id, { paths: [process.cwd()] });
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -33,8 +37,8 @@ const retrieveBaseModules = () => {
 
   Object.values(modules).forEach((m) =>
     m?.forEach((f) => {
-      if (f.endsWith(".js")) scripts.push(new URL(f, ctx.publicPath).href);
-      else styles.push(new URL(f, ctx.publicPath).href);
+      if (f.endsWith(".js")) scripts.push(concatUrl(ctx.publicPath, f));
+      else styles.push(concatUrl(ctx.publicPath, f));
     })
   );
 
@@ -57,7 +61,7 @@ const CSRCfg = () => {
   routes.forEach((k) => {
     const m = pageModules[k];
     if (m) {
-      pages[k] = m.map((f) => new URL(f, publicPath).href);
+      pages[k] = m.map((f) => concatUrl(publicPath, f));
     }
   });
 
@@ -85,8 +89,8 @@ function retrievePageModules(
   const scripts: string[] = [];
   const styles: string[] = [];
   curPage.forEach((f) => {
-    if (f.endsWith(".js")) scripts.push(new URL(f, ctx.publicPath).href);
-    else if (f.endsWith(".css")) styles.push(new URL(f, ctx.publicPath).href);
+    if (f.endsWith(".js")) scripts.push(concatUrl(ctx.publicPath, f));
+    else if (f.endsWith(".css")) styles.push(concatUrl(ctx.publicPath, f));
   });
   return { scripts, styles };
 }

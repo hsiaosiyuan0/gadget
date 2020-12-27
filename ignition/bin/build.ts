@@ -275,7 +275,7 @@ export const build = async () => {
   const opts: BuildOptions = {
     root,
     mode: "development",
-    basename: "/",
+    basename: process.env.BASE_NAME ?? "/",
     outputPath,
     publicPath,
   };
