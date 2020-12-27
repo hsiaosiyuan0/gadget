@@ -41,7 +41,7 @@ export async function dev() {
 
     if (!server) {
       server = svrx({
-        root: path.join(root, ".printer", "dist"),
+        root: process.env.BUILD_DIST,
         open: false,
       });
       server.start();

@@ -11,6 +11,7 @@ import { assembleHtml } from "./assemble";
 export async function renderSSG(route: Route, staticData: any) {
   const ctx = renderContext();
   ctx.currentRoute = route;
+  ctx.publicPath = process.env.PUBLIC_URL!;
 
   const pageModule = retrieveModule(route.pattern) as PageModule;
 

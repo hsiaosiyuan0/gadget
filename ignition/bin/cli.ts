@@ -84,6 +84,12 @@ program
 `);
   });
 
+function ensureBuildDist() {
+  if (!process.env.BUILD_DIST) {
+    process.env.BUILD_DIST = path.join(process.cwd(), ".printer", "dist");
+  }
+}
+
 async function ensureWordsDir(dir: string) {
   if (dir) process.env.WORDS = path.resolve(dir);
   if (!process.env.WORDS) process.env.WORDS = path.resolve("words");
@@ -100,6 +106,7 @@ program
   .description("typing words and see what's their presentation")
   .action(async (dir) => {
     await ensureWordsDir(dir);
+    ensureBuildDist();
     await dev();
   });
 
@@ -110,6 +117,7 @@ program
   )
   .action(async (dir) => {
     await ensureWordsDir(dir);
+    ensureBuildDist();
     process.chdir(".printer");
 
     const startTime = new Date().getTime();
