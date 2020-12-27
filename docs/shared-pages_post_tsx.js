@@ -240,18 +240,6 @@ function Node(data) {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(Node, data));
   })));
 }
-
-function offsetTop(node) {
-  var top = 0;
-
-  do {
-    top += node.offsetTop;
-    node = node.offsetParent;
-  } while (node && node !== document.body);
-
-  return top;
-}
-
 function Toc(props) {
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(props.data),
       _useState4 = _slicedToArray(_useState3, 2),
@@ -263,12 +251,14 @@ function Toc(props) {
     var spy;
     setTimeout(function () {
       try {
-        var Gumshoe = window.Gumshoe;
-        spy = new Gumshoe(".".concat(_components_toc_index_pure_scss__WEBPACK_IMPORTED_MODULE_2__.default.toc, " a"), {
-          navClass: _components_toc_index_pure_scss__WEBPACK_IMPORTED_MODULE_2__.default.active,
-          offset: 89,
-          reflow: true
-        });
+        if (document.querySelectorAll(".".concat(_components_toc_index_pure_scss__WEBPACK_IMPORTED_MODULE_2__.default.toc, " a")).length) {
+          var Gumshoe = window.Gumshoe;
+          spy = new Gumshoe(".".concat(_components_toc_index_pure_scss__WEBPACK_IMPORTED_MODULE_2__.default.toc, " a"), {
+            navClass: _components_toc_index_pure_scss__WEBPACK_IMPORTED_MODULE_2__.default.active,
+            offset: 89,
+            reflow: true
+          });
+        }
       } catch (error) {}
     }, 0);
     return function () {
