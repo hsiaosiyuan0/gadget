@@ -114,6 +114,7 @@ program
 
     const startTime = new Date().getTime();
     console.log(chalk.cyan("\nBuilding..."));
+    Error.stackTraceLimit = Infinity;
     await build();
     console.log(
       chalk.green(

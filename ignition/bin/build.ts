@@ -268,8 +268,9 @@ export const build = async () => {
   // process should be run in `.printer` dir
   const root = process.cwd();
 
-  let outputPath = path.resolve(process.env.BUILD_DIST!);
-  outputPath = outputPath || path.join(root, "dist");
+  const outputPath = path.resolve(
+    process.env.BUILD_DIST || path.join(root, "dist")
+  );
 
   const publicPath = process.env.PUBLIC_URL || "/";
 

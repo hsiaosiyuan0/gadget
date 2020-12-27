@@ -1,2 +1,2 @@
-- [Getting Started](/getting-started)
-  - [Hello World](/getting-started/hello-world.md)
+- [\_dist](/_dist)
+  - [pages](/_dist/pages)
