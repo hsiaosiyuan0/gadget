@@ -45,7 +45,11 @@ program
       console.log(chalk.cyan("Running the init script in template"));
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       require("ts-node").register({
-        compilerOptions: { module: "CommonJS" },
+        compilerOptions: {
+          module: "CommonJS",
+          sourceMap: true,
+          esModuleInterop: true,
+        },
         transpileOnly: true,
         typeCheck: false,
       });
