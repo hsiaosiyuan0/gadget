@@ -8,6 +8,7 @@
     "rehype",
     "resultify",
     "svrx",
+    "tempy",
     "unist",
     "vfile"
   ]

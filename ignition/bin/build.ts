@@ -13,11 +13,6 @@ import { findExistPath } from "../util";
 import { launch, renderContext, renderSSG } from "../render";
 import { syncCatalog } from "../catalog";
 
-const absPath = (pth?: string) => {
-  if (!pth) return pth;
-  return path.isAbsolute(pth) ? pth : path.resolve(pth);
-};
-
 export interface BuildOptions {
   root: string;
   mode: Mode;
@@ -273,7 +268,7 @@ export const build = async () => {
   // process should be run in `.printer` dir
   const root = process.cwd();
 
-  let outputPath = absPath(process.env.BUILD_DIST);
+  let outputPath = path.resolve(process.env.BUILD_DIST!);
   outputPath = outputPath || path.join(root, "dist");
 
   const publicPath = process.env.PUBLIC_URL || "/";

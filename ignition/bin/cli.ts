@@ -20,7 +20,8 @@ function fatal(msg: string): never {
 }
 
 program
-  .command("use <git>", "use a template by specify its git-repo address")
+  .command("use <git>")
+  .description("use a template by specify its git-repo address")
   .action(async (repo) => {
     // if current has dir named `.printer` stop do further
     const isPrinterExists = await fileExists(".printer");
@@ -82,7 +83,8 @@ async function ensureWordsDir(dir: string) {
 }
 
 program
-  .command("typing [dir]", "typing words and see what's their presentation")
+  .command("typing [dir]")
+  .description("typing words and see what's their presentation")
   .action(async (dir) => {
     await ensureWordsDir(dir);
     await dev();
