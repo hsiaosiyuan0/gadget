@@ -1,6 +1,6 @@
 {
   "name": "gadget.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A gadget to serve your statics.",
   "repository": "https://github.com/hsiaosiyuan0/gadget",
   "author": "hsiaosiyuan0@outlook.com",
