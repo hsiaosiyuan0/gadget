@@ -1,12 +1,14 @@
 {
   "name": "gadget.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A gadget to serve your statics.",
   "repository": "https://github.com/hsiaosiyuan0/gadget",
   "author": "hsiaosiyuan0@outlook.com",
   "license": "MIT",
   "main": "salver/index.ts",
-  "bin": "ignition/bin/cli.js",
+  "bin": {
+    "gadget": "ignition/bin/cli.js"
+  },
   "scripts": {
     "dev:ignition": "tsc -b --watch ignition/tsconfig.json",
     "clean:ignition": "tsc -b --clean ignition/tsconfig.json"
