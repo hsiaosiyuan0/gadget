@@ -1,26 +1,27 @@
 import { renderContext, getClientModule } from "./launch";
 import { PartialRecord } from "../../shared";
+import type { createElement } from "react";
 
 const NS = "__gadget__";
 
 // load from user-space
 const fromCwd = (id: string) => require.resolve(id, { paths: [process.cwd()] });
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const React = require(fromCwd("react"));
+const React = () => require(fromCwd("react"));
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ReactRender = require(fromCwd("react-dom/server"));
+const ReactRender = () => require(fromCwd("react-dom/server"));
 
-const { createElement } = React;
-
-export const renderToString: typeof React.createElement = (() => {
+export const renderToString: typeof createElement = (() => {
   return (type: any, props?: any, ...children: any[]) =>
-    ReactRender.renderToString(createElement(type, props, children)) as any;
+    ReactRender().renderToString(
+      React().createElement(type, props, children)
+    ) as any;
 })();
 
-export const renderToStaticMarkup: typeof React.createElement = (() => {
+export const renderToStaticMarkup: typeof createElement = (() => {
   return (type: any, props?: any, ...children: any[]) =>
-    ReactRender.renderToStaticMarkup(
-      createElement(type, props, children)
+    ReactRender().renderToStaticMarkup(
+      React().createElement(type, props, children)
     ) as any;
 })();
 
@@ -96,6 +97,7 @@ export const assembleHtml = async () => {
 
   if (!pageModule) throw new Error("page module is missing");
 
+  const createElement = React().createElement;
   let app: any = null;
   if (pageProps !== null) {
     const page = pageModule?.exports?.default;
