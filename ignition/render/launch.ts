@@ -123,7 +123,7 @@ function setupAppContext(bundle: string) {
   ctx.pageModules = manifest.pages;
 
   ctx.router = {
-    basename: process.env.BASE_NAME ?? "/",
+    basename: process.env.BASENAME ?? "/",
     routes: Object.keys(ctx.pageModules),
   };
 
