@@ -7,6 +7,7 @@ import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
 import prettyMs from "pretty-ms";
+import shell from "shelljs";
 import { fileExists, isDir } from "../util";
 import { dev } from "./dev";
 import { build } from "./build";
@@ -65,6 +66,18 @@ program
         process.exit(1);
       }
     }
+
+    // install the dependencies of template
+    console.log(chalk.cyan("Installing the dependencies of template..."));
+    const isYarn = await fileExists(path.resolve(".printer", "yarn.lock"));
+    shell.cd(".printer");
+    if (isYarn) {
+      shell.exec("yarn");
+    } else {
+      shell.exec("npm i");
+    }
+    shell.cd("..");
+
     console.log(`\n🎉 Run below command to start typing:
 
   ${chalk.cyan(`npx gadget.js typing`)}
