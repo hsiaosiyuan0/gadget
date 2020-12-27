@@ -57,7 +57,7 @@ const CSRCfg = () => {
   routes.forEach((k) => {
     const m = pageModules[k];
     if (m) {
-      pages[k] = m.map((f) => publicPath + f);
+      pages[k] = m.map((f) => new URL(f, publicPath).href);
     }
   });
 
