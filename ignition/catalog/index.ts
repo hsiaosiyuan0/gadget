@@ -121,7 +121,7 @@ async function restoreDiskCatalog(dir: string) {
   await walkDir<ScanPostsContext>(dir, ctx, {
     async file(ctx, file) {
       const filename = path.parse(file).name;
-      if (file.endsWith(".md")) {
+      if (file.endsWith(".md") && !filename.startsWith("_")) {
         const meta = await readPostMdMeta(file);
         const post: CatalogItem = {
           name: meta.title ?? filename,
@@ -222,17 +222,14 @@ function catalogToMd(catalog: CatalogItem[]) {
         ordered: false,
         start: null,
         spread: true,
-        children: catalog
-          .filter((child) => !!child.children)
-          .map(categoryToMdast)
-          .map((children) => {
-            return {
-              type: "listItem",
-              spread: false,
-              checked: null,
-              children,
-            };
-          }),
+        children: catalog.map(categoryToMdast).map((children) => {
+          return {
+            type: "listItem",
+            spread: false,
+            checked: null,
+            children,
+          };
+        }),
       },
     ],
   };
@@ -325,8 +322,10 @@ interface CatalogItem {
   children?: CatalogItem[];
 }
 
+export const catalogFilename = "_catalog.md";
+
 async function restoreCatalog(root: string) {
-  const file = vfile({ path: path.join(root, "catalog.md") });
+  const file = vfile({ path: path.join(root, catalogFilename) });
   file.contents = (await fs.promises.readFile(file.path!)).toString();
 
   const tree: { children: CatalogItem[] } = {
@@ -391,32 +390,51 @@ async function updateCatalog(root: string) {
   try {
     old = await restoreCatalog(root);
   } catch (error) {}
-  const catalog = await restoreDiskCatalog(root);
 
+  const catalog = await restoreDiskCatalog(root);
   catalog.forEach((child) => patchNode(old, child));
 
-  function patchNode(parent: CatalogItem[], node: CatalogItem) {
-    const i = parent.findIndex((n) => n.name === node.name);
+  old = removeLeft(old, catalog);
+
+  function removeLeft(left: CatalogItem[], right: CatalogItem[]) {
+    return left.filter((node) => findNodeIdx(right, node) !== -1);
+  }
+
+  function findNodeIdx(children: CatalogItem[], node: CatalogItem) {
+    return children.findIndex((n) => {
+      if (n.url && node.url) return n.url === node.url;
+      return n.name === node.name;
+    });
+  }
+
+  function patchNode(oldParent: CatalogItem[], node: CatalogItem) {
+    const i = oldParent.findIndex((n) => {
+      if (n.url && node.url) return n.url === node.url;
+      return n.name === node.name;
+    });
     if (i !== -1) {
-      const old = parent[i];
+      const old = oldParent[i];
       if (old.children) {
         if (node.children) {
+          old.children = removeLeft(old.children, node.children);
           node.children.forEach((child) => patchNode(old.children!, child));
         } else {
-          parent[i] = node;
+          oldParent[i] = node;
         }
       }
     } else {
-      parent.push(node);
+      oldParent.push(node);
     }
   }
 
   return old;
 }
 
+// produce a catalog as sitemap for templates can use it instead of walking
+// directories by themselves
 export async function syncCatalog(dir: string) {
   const tree = await updateCatalog(dir);
-  const dist = path.join(dir, "catalog.md");
+  const dist = path.resolve(dir, catalogFilename);
   const md = catalogToMd(tree);
   await fs.promises.writeFile(
     dist,

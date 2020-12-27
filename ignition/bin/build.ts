@@ -1,7 +1,11 @@
 import fs from "fs";
 import path from "path";
+import { inspect } from "util";
 import webpack from "webpack";
 import mkdirp from "mkdirp";
+import chalk from "chalk";
+import FriendlyErrorsWebpackPlugin from "friendly-errors-webpack-plugin";
+import prettyMs from "pretty-ms";
 import { Mode } from "../bundle/config/factors";
 import { makeConfig, concatPagesDir } from "../bundle/config";
 import { defer, trim } from "../../shared";
@@ -43,23 +47,86 @@ async function produceConfig({
   return config;
 }
 
+const friendlyErr: FriendlyErrorsWebpackPlugin & {
+  [k: string]: any;
+} = new FriendlyErrorsWebpackPlugin();
+
+function uniqueBy(arr: any[], fun: (el: any) => any) {
+  const seen: { [k: string]: any } = {};
+  return arr.filter((el) => {
+    const e = fun(el);
+    return !(e in seen) && (seen[e] = 1);
+  });
+}
+
+function extractErrorsFromStats(stats: webpack.Stats, type: string) {
+  const findErrorsRecursive = (
+    compilation: webpack.Compilation & {
+      [k: string]: any;
+    }
+  ) => {
+    const errors = compilation[type];
+    if (errors.length === 0 && compilation.children) {
+      for (const child of compilation.children) {
+        errors.push(...findErrorsRecursive(child));
+      }
+    }
+
+    return uniqueBy(errors, (error) => {
+      return error.message;
+    });
+  };
+
+  return findErrorsRecursive(stats.compilation);
+}
+
+function getCompileTime(stats?: webpack.Stats): number {
+  if (!stats) return 0;
+
+  return (stats.endTime ?? 0) - (stats.startTime ?? 0);
+}
+
 async function buildFromConfig(config: webpack.Configuration) {
   const deferred = defer<webpack.Stats | undefined>();
 
-  const packer = webpack(config);
-  packer.run((err, stats) => {
+  const process = webpack(config);
+
+  process.hooks.run.tap("build", () => {
+    console.log(chalk.cyan("Compiling ..."));
+  });
+
+  process.run((err, stats) => {
+    if (stats?.hasWarnings()) {
+      const warnings = extractErrorsFromStats(stats, "warnings");
+      friendlyErr.displayErrors(
+        uniqueBy(warnings, (error) => error.message),
+        "warning"
+      );
+    }
+
+    if (stats?.hasErrors()) {
+      const errors = extractErrorsFromStats(stats, "errors");
+      friendlyErr.displayErrors(
+        uniqueBy(errors, (error) => error.message),
+        "warning"
+      );
+    }
+
     if (err) {
       deferred.done(err);
       return;
     }
+
+    console.log(
+      chalk.green("Compiled successfully in " + prettyMs(getCompileTime(stats)))
+    );
     deferred.done(stats);
   });
 
   return deferred.promise;
 }
 
-// call this method only if the building of `*.data.ts` has
-// been finished
+// exec `*.data.ts` assoc with the route
 async function evaluatePageData(
   route: string
 ): Promise<Array<{ data: any; route: string }> | { data: any }> {
@@ -75,12 +142,36 @@ async function evaluatePageData(
     filename + ".data.js",
   ]);
   if (file) {
+    let m: any;
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const m = require(file).default;
-      if (typeof m === "function") return await m();
+      m = require(file).default;
     } catch (error) {
       console.error("Failed to load data script: " + filename, error);
+      process.exit(1);
+    }
+
+    try {
+      if (typeof m === "function") {
+        const data = await m();
+        if (Array.isArray(data)) {
+          const checkData = () => {
+            data.forEach((r) => {
+              if (r.route === undefined)
+                throw new Error(
+                  "The key `route` is required of item in collection data, found deformed item: " +
+                    inspect(r) +
+                    " at file: " +
+                    file
+                );
+            });
+          };
+          checkData();
+        }
+        return data;
+      }
+    } catch (error) {
+      console.error("Failed to exec data script: " + filename, error);
       process.exit(1);
     }
   }
@@ -90,7 +181,7 @@ async function evaluatePageData(
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("ts-node").register({
-  compilerOptions: { module: "CommonJS" },
+  compilerOptions: { module: "CommonJS", sourceMap: true },
   transpileOnly: true,
   typeCheck: false,
 });
@@ -178,7 +269,7 @@ export async function generatePages({
   }
 }
 
-(async () => {
+export const build = async () => {
   // process should be run in `.printer` dir
   const root = process.cwd();
 
@@ -202,8 +293,11 @@ export async function generatePages({
     process.exit(1);
   }
 
-  const WORDS = path.resolve(root, "..", "words");
-  process.env.WORDS = WORDS;
+  const WORDS = process.env.WORDS!;
+
+  console.log(chalk.cyan("Syncing catalog..."));
   await syncCatalog(WORDS);
+
+  console.log(chalk.cyan("Generating pages..."));
   await generatePages(opts);
-})();
+};

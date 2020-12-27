@@ -57,7 +57,8 @@ export function retrieveInternalModules() {
 }
 
 export function clientRuntimeModulePath() {
-  return path.parse(require.resolve("gadget", { paths: [process.cwd()] })).dir;
+  return path.parse(require.resolve("gadget.js", { paths: [process.cwd()] }))
+    .dir;
 }
 
 export function useInternalFile(id: string) {

@@ -41,11 +41,12 @@ export class GadgetManifestPlugin {
             let [name] = sourceName.split(delimiter);
             name = filename(name);
 
-            if (baseChunkGroupNames.includes(name)) {
-              let files = baseChunkGroupMap[name];
+            const hitBase = baseChunkGroupNames.find((n) => name.startsWith(n));
+            if (hitBase) {
+              let files = baseChunkGroupMap[hitBase];
               if (!files) {
                 files = [];
-                baseChunkGroupMap[name] = files;
+                baseChunkGroupMap[hitBase] = files;
               }
               files.push(sourceName);
             } else if (name.startsWith("pages/")) {

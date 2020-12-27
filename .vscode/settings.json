@@ -4,8 +4,10 @@
     "browserslist",
     "corejs",
     "mdast",
+    "opendir",
     "rehype",
     "resultify",
+    "svrx",
     "unist",
     "vfile"
   ]

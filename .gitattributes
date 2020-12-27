@@ -1,0 +1,3 @@
+**/*.js linguist-generated=true
+**/*.json linguist-generated=true
+ignition/bin/cli.ts linguist-generated=true

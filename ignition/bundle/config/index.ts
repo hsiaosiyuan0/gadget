@@ -14,7 +14,6 @@ import { configPureCss, configPureScss, configScss, configCss } from "./style";
 import { configAsset } from "./asset";
 import { configOptimize } from "./optimize";
 import { GadgetManifestPlugin } from "../plugin/manifest";
-import FriendlyErrorsWebpackPlugin from "friendly-errors-webpack-plugin";
 
 export type StringDict = { [key: string]: string };
 
@@ -137,7 +136,6 @@ export async function makeConfig(factors: ConfigFactors) {
   config.resolveLoader.alias.merge(retrieveLoaders());
 
   config.plugin("deps").use(GadgetManifestPlugin, [pageOutletMap] as any);
-  config.plugin("friendlyErr").use(FriendlyErrorsWebpackPlugin);
 
   // defines
   const defines: { [k: string]: string } = {

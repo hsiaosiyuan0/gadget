@@ -1,9 +1,18 @@
-import * as fs from "fs";
+import fs from "fs";
 
 export async function fileExists(f: string) {
   try {
     await fs.promises.access(f, fs.constants.F_OK);
     return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+export async function isDir(f: string) {
+  try {
+    const stats = await fs.promises.stat(f);
+    return stats.isDirectory();
   } catch (error) {
     return false;
   }
