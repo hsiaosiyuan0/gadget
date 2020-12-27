@@ -1,4 +1,3 @@
-import path from "path";
 import { renderContext, getClientModule } from "./launch";
 import { PartialRecord } from "../../shared";
 import type { createElement } from "react";
@@ -34,8 +33,8 @@ const retrieveBaseModules = () => {
 
   Object.values(modules).forEach((m) =>
     m?.forEach((f) => {
-      if (f.endsWith(".js")) scripts.push(path.join(ctx.publicPath, f));
-      else styles.push(path.join(ctx.publicPath, f));
+      if (f.endsWith(".js")) scripts.push(new URL(f, ctx.publicPath).href);
+      else styles.push(new URL(f, ctx.publicPath).href);
     })
   );
 
@@ -86,8 +85,8 @@ function retrievePageModules(
   const scripts: string[] = [];
   const styles: string[] = [];
   curPage.forEach((f) => {
-    if (f.endsWith(".js")) scripts.push(path.join(ctx.publicPath, f));
-    else if (f.endsWith(".css")) styles.push(path.join(ctx.publicPath, f));
+    if (f.endsWith(".js")) scripts.push(new URL(f, ctx.publicPath).href);
+    else if (f.endsWith(".css")) styles.push(new URL(f, ctx.publicPath).href);
   });
   return { scripts, styles };
 }
