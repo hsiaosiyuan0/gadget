@@ -2,9 +2,10 @@ import path from "path";
 import chokidar from "chokidar";
 import svrx from "@svrx/svrx";
 import del from "del";
+import chalk from "chalk";
 import prettyMs from "pretty-ms";
 import { build } from "./build";
-import chalk from "chalk";
+import { templateAbsPath, configFilePath } from "./config";
 
 // should run in project root which contains a `words` directory stores the words
 // and a `.printer` stores the template
@@ -13,10 +14,8 @@ export async function dev() {
   let rebuilding = false;
   let startTime = 0;
 
-  const root = process.cwd();
-
   // change dir for building
-  process.chdir(".printer");
+  process.chdir(await templateAbsPath());
   process.env.DEBUG = "1";
 
   const rebuild = async () => {
@@ -31,7 +30,7 @@ export async function dev() {
     console.log(chalk.cyan("\nChanges detected, building..."));
     rebuilding = true;
 
-    await del([path.join(root, ".printer", "dist")]);
+    await del([process.env.BUILD_DIST!], { force: true });
     await build();
     console.log(
       chalk.green(
@@ -56,7 +55,12 @@ export async function dev() {
 
   const words = process.env.WORDS!;
   const watcher = chokidar.watch(
-    [words + "/**/*.ts", words + "/**/*.md", words + "/**/*.yml"],
+    [
+      words + "/**/*.ts",
+      words + "/**/*.md",
+      words + "/**/*.yml",
+      configFilePath(process.env.ROOT),
+    ],
     {
       ignoreInitial: true,
       ignored: new RegExp(path.join(words, "_.*\\.md")),

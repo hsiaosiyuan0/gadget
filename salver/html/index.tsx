@@ -67,7 +67,7 @@ export class Html extends React.Component<React.PropsWithChildren<HtmlProps>> {
     return (
       <html>
         <head>
-          <title>Gadget</title>
+          <title>__title__</title>
           <Styles list={styles} />
         </head>
         {children}

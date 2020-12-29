@@ -22,6 +22,7 @@ export function newContext() {
     baseModules: {},
     pageModules: {},
 
+    title: "",
     router: { routes: [] },
     request: {} as any,
     manifest: {} as any,
@@ -98,6 +99,7 @@ export function getClientModule(name: string) {
 
 function setupAppContext(bundle: string) {
   const dir = path.join(bundle);
+  const ctx = newContext();
 
   // for UI
   g().SERVER = true;
@@ -105,12 +107,14 @@ function setupAppContext(bundle: string) {
   g().useModule = (name: string, m: any) => {
     clientModules[name] = m;
   };
+  g().setTitle = (title: string) => {
+    ctx.title = title;
+  };
 
   const manifestFile = path.join(dir, "manifest.json");
   if (debug()) delete require.cache[dir];
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const manifest: Manifest = require(manifestFile);
-  const ctx = newContext();
   ctx.root = bundle;
   ctx.publicPath = normalizePublicUrl(
     process.env.PUBLIC_URL ? path.resolve(process.env.PUBLIC_URL, "/") : "/"
@@ -123,7 +127,7 @@ function setupAppContext(bundle: string) {
   ctx.pageModules = manifest.pages;
 
   ctx.router = {
-    basename: process.env.BASENAME ?? "/",
+    basename: process.env.BASENAME,
     routes: Object.keys(ctx.pageModules),
   };
 

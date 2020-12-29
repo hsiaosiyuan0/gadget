@@ -35,4 +35,4 @@ shared/**/*.js.map
 !ignition/.eslintrc.js
 lib
 dist
-.printer
+.gadget

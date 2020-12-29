@@ -268,8 +268,8 @@ export async function generatePages({
   }
 }
 
+// caller should change `cwd` in template dir
 export const build = async () => {
-  // process should be run in `.printer` dir
   const root = process.cwd();
 
   // BUILD_DIST should be set by caller
@@ -279,7 +279,7 @@ export const build = async () => {
   const opts: BuildOptions = {
     root,
     mode: "development",
-    basename: process.env.BASENAME ?? "/",
+    basename: process.env.BASENAME!,
     outputPath,
     publicPath,
   };

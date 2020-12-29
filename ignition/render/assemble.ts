@@ -129,6 +129,7 @@ export const assembleHtml = async () => {
   const htmlStr = renderToStaticMarkup(
     html,
     {
+      title: ctx.title,
       scripts: [
         { children: CSRCfg() },
         ...baseAssets.scripts,
@@ -138,5 +139,9 @@ export const assembleHtml = async () => {
     },
     createElement("div", { id: NS, key: NS }, app)
   );
-  return `${html.doctype}${htmlStr}`;
+
+  return `${html.doctype}${(htmlStr + "").replace(
+    /<title>[^<]*<\/title>/,
+    `<title>${ctx.title}</title>`
+  )}`;
 };

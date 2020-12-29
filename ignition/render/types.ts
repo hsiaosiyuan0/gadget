@@ -51,6 +51,7 @@ export interface RenderContext extends ExecutionContext {
   pageModule?: PageModule;
   pageProps?: any;
 
+  title: string;
   request: Request;
   ctx?: any;
 

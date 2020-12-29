@@ -21,6 +21,13 @@ export function useModule(name: string, module: any) {
   }
 }
 
+export function setTitle(title: string) {
+  const fn = duaGlobal().setTitle;
+  if (typeof fn === "function") {
+    fn(title);
+  }
+}
+
 export interface Config {
   initialProps: any;
   mnt: string;
