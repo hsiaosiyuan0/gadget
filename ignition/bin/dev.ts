@@ -18,6 +18,7 @@ export async function dev() {
   process.chdir(await templateAbsPath());
   process.env.DEBUG = "1";
 
+  let first = false;
   const rebuild = async () => {
     if (rebuilding) return;
 
@@ -31,7 +32,9 @@ export async function dev() {
     rebuilding = true;
 
     await del([process.env.BUILD_DIST!], { force: true });
-    await build();
+    await build(first);
+    if (first) first = false;
+
     console.log(
       chalk.green(
         "Built successfully in " + prettyMs(new Date().getTime() - startTime)

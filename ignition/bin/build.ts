@@ -269,7 +269,7 @@ export async function generatePages({
 }
 
 // caller should change `cwd` in template dir
-export const build = async () => {
+export const build = async (buildTemplate = true) => {
   const root = process.cwd();
 
   // BUILD_DIST should be set by caller
@@ -284,11 +284,13 @@ export const build = async () => {
     publicPath,
   };
 
-  const cfg = await produceConfig(opts);
-  try {
-    await buildFromConfig(cfg.toConfig());
-  } catch (error) {
-    process.exit(1);
+  if (buildTemplate) {
+    const cfg = await produceConfig(opts);
+    try {
+      await buildFromConfig(cfg.toConfig());
+    } catch (error) {
+      process.exit(1);
+    }
   }
 
   const WORDS = process.env.WORDS!;
