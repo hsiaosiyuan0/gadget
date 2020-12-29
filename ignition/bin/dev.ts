@@ -18,7 +18,7 @@ export async function dev() {
   process.chdir(await templateAbsPath());
   process.env.DEBUG = "1";
 
-  let first = false;
+  let first = true;
   const rebuild = async () => {
     if (rebuilding) return;
 
