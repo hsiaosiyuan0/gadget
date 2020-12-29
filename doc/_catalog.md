@@ -1,2 +1,0 @@
-- [Getting Started](/getting-started)
-  - [Hello World](/getting-started/hello-world.md)
