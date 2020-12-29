@@ -17,6 +17,8 @@ program.version(require("../../package.json").version);
 function ensureEnv() {
   if (!process.env.BUILD_DIST) {
     process.env.BUILD_DIST = path.join(process.cwd(), "dist");
+  } else {
+    process.env.BUILD_DIST = path.resolve(process.env.BUILD_DIST);
   }
   if (!process.env.PUBLIC_URL) {
     process.env.PUBLIC_URL = "/";
