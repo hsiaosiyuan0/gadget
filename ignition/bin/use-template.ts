@@ -1,6 +1,6 @@
 import path from "path";
 import shell from "shelljs";
-import chalk, { cyan } from "chalk";
+import chalk from "chalk";
 import ora from "ora";
 import simpleGit from "simple-git";
 import inquirer from "inquirer";
@@ -70,5 +70,5 @@ export async function useTemplate() {
   }
   shell.cd(cwd);
 
-  console.log(cyan.green(`Template installed successfully 🎉`));
+  console.log(chalk.green(`Template installed successfully 🎉`));
 }
