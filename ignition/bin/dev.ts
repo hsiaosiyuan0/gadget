@@ -1,7 +1,6 @@
 import path from "path";
 import chokidar from "chokidar";
 import svrx from "@svrx/svrx";
-import del from "del";
 import chalk from "chalk";
 import prettyMs from "pretty-ms";
 import { build } from "./build";
@@ -31,7 +30,6 @@ export async function dev() {
     console.log(chalk.cyan("\nChanges detected, building..."));
     rebuilding = true;
 
-    await del([process.env.BUILD_DIST!], { force: true });
     await build(first);
     if (first) first = false;
 
