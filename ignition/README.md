@@ -1,3 +1,3 @@
 # Ignition
 
-The ignition of your gadget.
+Ignition is used to couple your words with your favorite template 🚀.

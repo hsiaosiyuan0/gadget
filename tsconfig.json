@@ -13,5 +13,5 @@
     "declaration": true,
     "declarationDir": "lib"
   },
-  "include": ["salver/**/*.ts", "ignition/**/*.ts"]
+  "include": ["salver/**/*.ts", "ignition/**/*.ts", "shared/**/*.ts"]
 }

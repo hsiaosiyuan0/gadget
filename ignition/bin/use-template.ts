@@ -10,7 +10,7 @@ import { ensureGadgetDir, template, templateAbsPath } from "./config";
 export async function useTemplate() {
   await ensureGadgetDir();
 
-  // git clone template into .printer
+  // git clone template into .gadget
   const git = simpleGit();
   const tplAbsPath = await templateAbsPath();
 
