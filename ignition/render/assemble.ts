@@ -135,7 +135,11 @@ export const assembleHtml = async () => {
         ...baseAssets.scripts,
         ...pageAssets.scripts,
       ],
-      styles: [...baseAssets.styles, ...pageAssets.styles],
+      styles: [
+        ctx.outletStylesheet,
+        ...baseAssets.styles,
+        ...pageAssets.styles,
+      ],
     },
     createElement("div", { id: NS, key: NS }, app)
   );

@@ -57,6 +57,7 @@ export interface RenderContext extends ExecutionContext {
 
   // the outlet component
   outlet: any;
+  outletStylesheet?: string;
 
   manifest: Manifest;
 }

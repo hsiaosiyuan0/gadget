@@ -24,6 +24,7 @@ export async function renderSSG(route: Route, staticData: any) {
   if (ctx.manifest.pageOutletMap) {
     const id = ctx.manifest.pageOutletMap[route.pattern];
     const file = path.resolve(ctx.bundleDir, id + ".js");
+    ctx.outletStylesheet = "/" + id + ".css";
     if (file) {
       if (debug()) {
         delete require.cache[file];
