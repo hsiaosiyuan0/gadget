@@ -105,7 +105,7 @@ export default class App extends Component<AppProps, AppState> {
     let props: any = {};
     let pattern = route.pattern;
     pattern = pattern.startsWith("/") ? pattern.slice(1) : pattern;
-    pattern = "/_data/" + pattern;
+    pattern = "/data/" + pattern;
     const resp = await fetch(
       `${hrefToUrl({ pathname: pattern })}.json`
     ).then((resp) => resp.json());
