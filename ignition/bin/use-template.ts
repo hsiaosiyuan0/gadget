@@ -4,6 +4,7 @@ import chalk from "chalk";
 import ora from "ora";
 import simpleGit from "simple-git";
 import inquirer from "inquirer";
+import copy from "recursive-copy";
 import { fileExists } from "../util";
 import { ensureGadgetDir, template, templateAbsPath } from "./config";
 
@@ -20,9 +21,18 @@ export async function useTemplate() {
     return;
   }
 
-  const spinner = ora("Cloning template into: " + tplRelativePath).start();
-  await git.clone(await template(), tplAbsPath);
-  spinner.stop();
+  const tplUrl = await template();
+  if (path.isAbsolute(tplUrl)) {
+    const spinner = ora("Copying template into: " + tplRelativePath).start();
+    await copy(tplUrl, tplAbsPath, {
+      filter: (name) => !name.includes("node_modules"),
+    });
+    spinner.stop();
+  } else {
+    const spinner = ora("Cloning template into: " + tplRelativePath).start();
+    await git.clone(tplUrl, tplAbsPath);
+    spinner.stop();
+  }
 
   // run tpl init.ts or init.coffee
   const initFile = path.resolve(tplAbsPath, "init.ts");
