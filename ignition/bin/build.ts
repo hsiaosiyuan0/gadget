@@ -258,7 +258,7 @@ export async function generatePages({
     );
     const dataPathname = path.join(
       outputPath,
-      "_data",
+      "data",
       ...parts.slice(0, -1),
       parts[parts.length - 1] + ".json"
     );
