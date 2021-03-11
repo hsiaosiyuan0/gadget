@@ -1,7 +1,6 @@
 import React, { ComponentClass, Component, createElement } from "react";
 import { render, hydrate } from "react-dom";
 import { emit, on, off, parseUrlRaiseErr } from "../../shared";
-import * as EventBus from "../../shared/evt-bus";
 import { waitModuleLoaded } from "./module-loader";
 import {
   mountPoint,
@@ -21,8 +20,6 @@ import {
   hrefToRoute,
   urlToRoute,
 } from "./util";
-
-export { EventBus };
 
 export const EventAfterRouteChanged = Symbol("after-route-changed");
 export const EventBeforeRouteChanged = Symbol("before-route-changed");
